@@ -6,4 +6,4 @@ Web Application
 4. Docker image created and registred in Azure Container Registry
 5. Deployed docker container to azure web server
 
-URL: https://watchguardmarsrover.azurewebsites.net/
+URL: https://watchguardroverweb.azurewebsites.net/
