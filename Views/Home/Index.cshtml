@@ -2,7 +2,86 @@
     ViewData["Title"] = "Home Page";
 }
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $("#btnPullImage").click(function () {
+
+                var date = $("#dateInput").val();
+                if (validateInput(date)) {
+                    var formattedDate = moment(date).format("YYYY-MM-DD");
+                    getImages(formattedDate);
+                };
+            });
+
+        })
+
+        function getImages(date) {
+            $("#imagesContainer").html("");
+            $.ajax({
+                url: "/api/photos/" + date,
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (result) {
+                    if (result.length == 0) {
+                         $("#imagesContainer").html("<p>Rover seems to be off this day. Sorry, nothing to display.</p>");
+                    }
+                    else {
+                        var htmltext = "<div class='lightboxgallery-gallery clearfix'>";
+
+                        $.each(result, function (k, v) {
+                            var imageSrc = v.imageSrc
+                            htmltext +=
+                                "<a class='lightboxgallery-gallery-item' target='_blank' href='" + imageSrc + "'>" +
+                                "<div>" +
+                                "<img src='" + v.imageSrc + "'>" +
+                                "<div class='lightboxgallery-gallery-item-content'>" +
+                                "<span class='lightboxgallery-gallery-item-title'>" + v.photoId + "</span>" +
+                                "</div>" +
+                                "</div>" +
+                                "</a>";
+                        });
+                        htmltext += "</div>";
+                        $("#imagesContainer").html(htmltext);
+                    }
+
+
+                }
+            });
+        };
+
+        function validateInput(date) {
+            var isvalid = false;
+            if (date == "") {
+                $("#dateInput").css('border-color', 'red');
+            }
+            else {
+                isvalid = true;
+                $("#dateInput").css('border-color', '');
+            }
+            return isvalid;
+        }
+
+
+    </script>
+}
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Ready for some photos from Rover?!!</p>
 </div>
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="form-inline">
+            <label for="dateInput" class="mb-2 mr-sm-2">Date:</label>
+            <input type="date" class="form-control mb-2 mr-sm-2 col-sm-10" id="dateInput" name="dateInput">
+            <input type="button" class="btn btn-success mb-2" value="Pull Images" id="btnPullImage">
+        </div>
+    </div>
+</div>
+
+<div class="container" id="imagesContainer">
+
+</div>
+
