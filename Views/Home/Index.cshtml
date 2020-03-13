@@ -19,6 +19,7 @@
 
         function getImages(date) {
             $("#imagesContainer").html("");
+            $("#loading").show();
             $.ajax({
                 url: "/api/photos/" + date,
                 contentType: "application/json",
@@ -43,10 +44,10 @@
                                 "</a>";
                         });
                         htmltext += "</div>";
+                        
                         $("#imagesContainer").html(htmltext);
                     }
-
-
+                    $("#loading").hide();
                 }
             });
         };
@@ -62,7 +63,6 @@
             }
             return isvalid;
         }
-
 
     </script>
 }
@@ -81,6 +81,10 @@
     </div>
 </div>
 
+<div class="container" id="loading"  style="display:none">
+    pulling images fom far far away........
+    <img src="~/gifs/loading.gif"/>
+</div>
 <div class="container" id="imagesContainer">
 
 </div>
